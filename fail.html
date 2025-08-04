@@ -133,13 +133,6 @@
             box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
         }
 
-        .btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
         .btn-secondary {
             background: #6c757d;
         }
@@ -244,22 +237,6 @@
             font-size: 1.2em;
             color: #666;
             margin-bottom: 15px;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #4facfe;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-left: 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -633,7 +610,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn" id="submitBtn" onclick="validatePurchaseIntention()">Submit Responses</button>
+                <button class="btn" onclick="validatePurchaseIntention()">Submit Responses</button>
             </div>
 
             <!-- Thank You Page -->
@@ -664,11 +641,8 @@
     <script>
         let currentStep = 1;
         const totalSteps = 7;
-        let condition = null;
+        let condition = null; // Will be set randomly
         let responses = {};
-
-        // REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-        const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 
         // Scenarios for different conditions
         const scenarios = {
@@ -700,11 +674,53 @@
                 content: "Imagine the following situation:<br><br>Imagine you come across a limited-edition collectible product for RM50. The product clearly shows the exact item you will receive a Cry Baby.",
                 image: `
                     <div style="text-align: center; margin: 20px 0;">
-                        <img src="https://prod-eurasian-res.popmart.com/default/20240422_100725_282634__1200x1200.jpg?x-oss-process=image/format,webp" 
-                             style="width: 200px; height: 200px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); object-fit: cover;">
+                        <div style="background: #000; width: 200px; height: 200px; border-radius: 15px; 
+                                    display: inline-flex; align-items: center; justify-content: center;
+                                    box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 15px; position: relative;">
+                            <div style="position: relative;">
+                                <!-- Keychain ring -->
+                                <div style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+                                           width: 30px; height: 30px; border: 4px solid #ffc0cb; border-radius: 50%;
+                                           background: transparent;"></div>
+                                <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+                                           width: 4px; height: 20px; background: #ffc0cb;"></div>
+                                
+                                <!-- Red bow -->
+                                <div style="position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+                                           width: 40px; height: 15px; background: #dc3545; border-radius: 20px;"></div>
+                                <div style="position: absolute; top: -2px; left: 50%; transform: translateX(-50%);
+                                           width: 8px; height: 10px; background: #dc3545;"></div>
+                                
+                                <!-- Main character body -->
+                                <div style="width: 80px; height: 80px; background: #ffc0cb; border-radius: 15px;
+                                           display: flex; flex-direction: column; align-items: center; justify-content: center;
+                                           position: relative;">
+                                    <!-- Face -->
+                                    <div style="background: #ffe4e1; width: 60px; height: 50px; border-radius: 50%;
+                                               display: flex; align-items: center; justify-content: center; position: relative;">
+                                        <!-- Eyes -->
+                                        <div style="position: absolute; left: 15px; top: 15px; width: 8px; height: 12px; 
+                                                   background: #000; border-radius: 10px;"></div>
+                                        <div style="position: absolute; right: 15px; top: 15px; width: 8px; height: 12px; 
+                                                   background: #000; border-radius: 10px;"></div>
+                                        <!-- Mouth -->
+                                        <div style="position: absolute; bottom: 12px; width: 12px; height: 3px; 
+                                                   background: #ff6b6b; border-radius: 3px;"></div>
+                                        <!-- Cheeks -->
+                                        <div style="position: absolute; left: 5px; top: 25px; width: 8px; height: 8px; 
+                                                   background: #ffb3ba; border-radius: 50%; opacity: 0.7;"></div>
+                                        <div style="position: absolute; right: 5px; top: 25px; width: 8px; height: 8px; 
+                                                   background: #ffb3ba; border-radius: 50%; opacity: 0.7;"></div>
+                                    </div>
+                                    <!-- Hair -->
+                                    <div style="position: absolute; top: -15px; width: 50px; height: 25px; 
+                                               background: #ffa500; border-radius: 25px 25px 5px 5px;"></div>
+                                </div>
+                            </div>
+                        </div>
                         <div style="margin-top: 15px;">
-                            <div style="font-size: 18px; color: #667eea; font-weight: bold;">🎀 Cry Baby × Powerpuff Girls</div>
-                            <div style="font-size: 14px; color: #666; margin: 5px 0;">Limited-edition collectible featuring Cry Baby × Powerpuff Girls series.</div>
+                            <div style="font-size: 18px; color: #667eea; font-weight: bold;">🎀 Cry Baby Collectible</div>
+                            <div style="font-size: 14px; color: #666; margin: 5px 0;">Limited-edition collectible keychain featuring adorable Cry Baby character.</div>
                             <div style="font-size: 24px; color: #e74c3c; font-weight: bold;">RM 50</div>
                         </div>
                     </div>
@@ -721,7 +737,7 @@
             // Hide current section
             document.querySelector('.section.active').classList.remove('active');
             
-            // Show next section  
+            // Show next section
             document.getElementById(sectionId).classList.add('active');
             
             currentStep++;
@@ -815,7 +831,7 @@
             nextSection('purchase-intention');
         }
 
-        async function validatePurchaseIntention() {
+        function validatePurchaseIntention() {
             const urgeBuy = document.querySelector('input[name="urge_buy"]:checked');
             const wantPurchase = document.querySelector('input[name="want_purchase"]:checked');
             const impulseBuy = document.querySelector('input[name="impulse_buy"]:checked');
@@ -832,43 +848,10 @@
             responses.probability_buy = probabilityBuy.value;
             responses.timestamp = new Date().toISOString();
 
-            // Show loading state
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = 'Submitting...<div class="loading"></div>';
-
-            try {
-                // Send data to Google Sheets
-                await submitToGoogleSheets(responses);
-                nextSection('thankyou');
-            } catch (error) {
-                console.error('Submission error:', error);
-                alert('There was an error submitting your responses. Please try again.');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Submit Responses';
-            }
-        }
-
-        async function submitToGoogleSheets(data) {
-            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-                // For testing - just log the data
-                console.log('Study responses:', data);
-                return;
-            }
-
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            return response.json();
+            // In a real implementation, you would send this data to your server
+            console.log('Study responses:', responses);
+            
+            nextSection('thankyou');
         }
 
         // Initialize progress bar
