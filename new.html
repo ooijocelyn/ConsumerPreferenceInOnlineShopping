@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumer Purchase Decision Research Study</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-option:hover {
+            border-color: #4facfe;
+            background-color: #f8f9ff;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 10px 20px rgba(108, 117, 125, 0.3);
+        }
+
+        .consent-text {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #4facfe;
+            margin-bottom: 25px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .consent-text h3 {
+            color: #4facfe;
+            margin-bottom: 15px;
+        }
+
+        .consent-text p {
+            margin-bottom: 15px;
+        }
+
+        .scenario-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .scale-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .scale-options {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .scale-option-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .scale-options input[type="radio"] {
+            transform: scale(1.3);
+        }
+
+        .scale-number {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e1e5e9;
+            border-radius: 2px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .thank-you {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .thank-you h2 {
+            color: #4facfe;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        .thank-you p {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Consumer Purchase Decision Research Study</h1>
+            <p>HELP University - Department of Psychology</p>
+        </div>
+
+        <div class="content">
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+            </div>
+
+            <!-- Welcome Section -->
+            <div class="section active" id="welcome">
+                <h2>Welcome to Our Research Study</h2>
+                <p>This study explores how certainty versus uncertainty in product information influences consumer purchase decisions in young adults.</p>
+                <br>
+                <p><strong>Time Required:</strong> Approximately 10-15 minutes</p>
+                <p><strong>Participants:</strong> Adults aged 18-29 years</p>
+                <br>
+                <button class="btn" onclick="nextSection('consent')">Begin Study</button>
+            </div>
+
+            <!-- Informed Consent Section -->
+            <div class="section" id="consent">
+                <h2>Informed Consent</h2>
+                <div class="consent-text">
+                    <p><strong>Dear participants,</strong></p>
+                    <p>This study explores how certainty versus uncertainty in product information influences consumer purchase decisions in young adults. To participate in this study, you must:</p>
+                    <ol>
+                        <li>Be aged between 18-29 years old, and</li>
+                        <li>Not be diagnosed with any psychological disorder</li>
+                    </ol>
+                    
+                    <h3>What will be done:</h3>
+                    <p>If you choose to take part in this research, you will first be asked to read and agree to an informed consent form. After that, you will be required to provide some demographic information. Then, you will be presented with a short scenario involving a purchasing situation followed by a Purchase Intention Scale (Bagozzi, 2016) to measure your intention to purchase. The entire process is expected to take no more than 10 minutes.</p>
+                    
+                    <h3>Risks and discomfort:</h3>
+                    <p>There are no anticipated risks or discomfort in participation in the current study. However, if you experience any discomfort while participating in this study, you are free to terminate your participation at any time, and you will not be penalised. If you find your participation in the study has caused you psychological harm, you may contact the Centre of Psychological and Counselling Services (CPCS) at https://www.cpcs-helpuni.com/ (03-78493200) or any reputable counselling centres near you. Please note that the CPCS only sees clients on an appointment basis.</p>
+                    
+                    <h3>Confidentiality:</h3>
+                    <p>Your responses will remain anonymous throughout the study. The information and data collected will only be assessed by the researchers and the researchers' supervisor.</p>
+                    
+                    <h3>Decision to quit at any time:</h3>
+                    <p>Participation in this study is voluntary, you may withdraw at any time. No adverse action will be taken against you for withdrawing your participation. If you wish to quit the study, you may exit without submitting the current informed consent form.</p>
+                    
+                    <h3>Benefits of this study:</h3>
+                    <p>While there are no direct benefits for participating in this study, your participation will contribute valuable insights to the field of psychology and consumer behavior. The findings may help researchers better understand how different types of rewards influence purchasing intention.</p>
+                    
+                    <p>This study has been reviewed and approved by the Ethics Review Board, Department of Psychology, Faculty of Behavioural Sciences at HELP University [ERB Approval Code: < >].</p>
+                    
+                    <p><strong>For any research-related problems, complaints, or questions regarding participants' rights, please contact:</strong><br>
+                    Chairperson, Ethics Review Board<br>
+                    Department of Psychology Faculty of Behavioural Sciences<br>
+                    Level 3, Block B HELP University – Subang 2<br>
+                    Persiaran Cakerawala, Seksyen U4<br>
+                    40150 Shah Alam Selangor Darul Ehsan Malaysia<br>
+                    Email: psych.erb@help.edu.my<br>
+                    Phone: +603 7849 3000</p>
+                    
+                    <p><strong>For any enquiries of this particular study, please contact:</strong><br>
+                    <strong>Researcher:</strong> Jocelyn Ooi Si Hua - B2100842@helplive.edu.my<br>
+                    <strong>Researcher's Supervisor:</strong> Khor Khai Ling - khailing.k@help.edu.my</p>
+                </div>
+
+                <div class="form-group">
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="consent_yes" name="consent" value="yes">
+                            <label for="consent_yes">Yes, I understand and agree to participate in this study.</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="consent_no" name="consent" value="no">
+                            <label for="consent_no">No, I would not like to participate in this study.</label>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn" onclick="processConsent()">Continue</button>
+            </div>
+
+            <!-- Eligibility Check -->
+            <div class="section" id="eligibility">
+                <h2>Eligibility Check</h2>
+                <div class="form-group">
+                    <label>Are you between 18-29 years old?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="age_yes" name="age_eligible" value="yes">
+                            <label for="age_yes">Yes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="age_no" name="age_eligible" value="no">
+                            <label for="age_no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Have you been diagnosed with any psychological disorder?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="psych_yes" name="psych_disorder" value="yes">
+                            <label for="psych_yes">Yes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="psych_no" name="psych_disorder" value="no">
+                            <label for="psych_no">No</label>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkEligibility()">Continue</button>
+            </div>
+
+            <!-- Demographics -->
+            <div class="section" id="demographics">
+                <h2>Demographic Information</h2>
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" min="18" max="29" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="prefer-not-to-say">Prefer not to say</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Do you have previous experience with purchasing blind box/mystery items?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="exp_yes" name="mystery_experience" value="yes">
+                            <label for="exp_yes">Yes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="exp_no" name="mystery_experience" value="no">
+                            <label for="exp_no">No</label>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn" onclick="validateDemographics()">Continue</button>
+            </div>
+
+            <!-- Scenario Presentation -->
+            <div class="section" id="scenario">
+                <h2>Purchase Scenario</h2>
+                <div class="scenario-box" id="scenarioContent">
+                    <!-- Scenario content will be inserted here based on condition -->
+                </div>
+                <button class="btn" onclick="nextSection('manipulation-check')">Continue</button>
+            </div>
+
+            <!-- Manipulation Check -->
+            <div class="section" id="manipulation-check">
+                <h2>Manipulation Check</h2>
+                
+                <div class="form-group">
+                    <label><strong>How certain were you about what reward you would receive?</strong></label>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
+                        1 = very uncertain, meaning you do not know what you will get<br>
+                        7 = very certain, meaning you know what you will get
+                    </p>
+                    <div class="scale-item">
+                        <span>Very Uncertain</span>
+                        <div class="scale-options">
+                            <div class="scale-option-container">
+                                <input type="radio" name="certainty_scale" value="1">
+                                <span class="scale-number">1</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="certainty_scale" value="2">
+                                <span class="scale-number">2</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="certainty_scale" value="3">
+                                <span class="scale-number">3</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="certainty_scale" value="4">
+                                <span class="scale-number">4</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="certainty_scale" value="5">
+                                <span class="scale-number">5</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="certainty_scale" value="6">
+                                <span class="scale-number">6</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="certainty_scale" value="7">
+                                <span class="scale-number">7</span>
+                            </div>
+                        </div>
+                        <span>Very Certain</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><strong>Which best describes the reward structure?</strong></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="reward_knew" name="reward_structure" value="knew">
+                            <label for="reward_knew">I knew exactly what I would get</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="reward_unsure" name="reward_structure" value="unsure">
+                            <label for="reward_unsure">I was unsure what I would get</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="validateManipulationCheck()">Continue</button>
+            </div>
+
+            <!-- Purchase Intention Scale -->
+            <div class="section" id="purchase-intention">
+                <h2>Purchase Intention Scale (Bagozzi et al., 2016)</h2>
+                <p><strong>Based on the situation above, please indicate your agreement with the following statements:</strong></p>
+
+                <div class="form-group">
+                    <div class="scale-item">
+                        <span><strong>I would feel a strong urge to buy the product.</strong></span>
+                        <div class="scale-options">
+                            <label style="margin-right: 5px; font-size: 12px;">Strongly Disagree</label>
+                            <div class="scale-option-container">
+                                <input type="radio" name="urge_buy" value="1">
+                                <span class="scale-number">1</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="urge_buy" value="2">
+                                <span class="scale-number">2</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="urge_buy" value="3">
+                                <span class="scale-number">3</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="urge_buy" value="4">
+                                <span class="scale-number">4</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="urge_buy" value="5">
+                                <span class="scale-number">5</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="urge_buy" value="6">
+                                <span class="scale-number">6</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="urge_buy" value="7">
+                                <span class="scale-number">7</span>
+                            </div>
+                            <label style="margin-left: 5px; font-size: 12px;">Strongly Agree</label>
+                        </div>
+                    </div>
+
+                    <div class="scale-item">
+                        <span><strong>I would want to purchase the product.</strong></span>
+                        <div class="scale-options">
+                            <label style="margin-right: 5px; font-size: 12px;">Strongly Disagree</label>
+                            <div class="scale-option-container">
+                                <input type="radio" name="want_purchase" value="1">
+                                <span class="scale-number">1</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="want_purchase" value="2">
+                                <span class="scale-number">2</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="want_purchase" value="3">
+                                <span class="scale-number">3</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="want_purchase" value="4">
+                                <span class="scale-number">4</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="want_purchase" value="5">
+                                <span class="scale-number">5</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="want_purchase" value="6">
+                                <span class="scale-number">6</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="want_purchase" value="7">
+                                <span class="scale-number">7</span>
+                            </div>
+                            <label style="margin-left: 5px; font-size: 12px;">Strongly Agree</label>
+                        </div>
+                    </div>
+
+                    <div class="scale-item">
+                        <span><strong>I would feel the impulse to buy the product.</strong></span>
+                        <div class="scale-options">
+                            <label style="margin-right: 5px; font-size: 12px;">Strongly Disagree</label>
+                            <div class="scale-option-container">
+                                <input type="radio" name="impulse_buy" value="1">
+                                <span class="scale-number">1</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="impulse_buy" value="2">
+                                <span class="scale-number">2</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="impulse_buy" value="3">
+                                <span class="scale-number">3</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="impulse_buy" value="4">
+                                <span class="scale-number">4</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="impulse_buy" value="5">
+                                <span class="scale-number">5</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="impulse_buy" value="6">
+                                <span class="scale-number">6</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="impulse_buy" value="7">
+                                <span class="scale-number">7</span>
+                            </div>
+                            <label style="margin-left: 5px; font-size: 12px;">Strongly Agree</label>
+                        </div>
+                    </div>
+
+                    <div class="scale-item">
+                        <span><strong>Please indicate the probability that you would buy the product.</strong></span>
+                        <div class="scale-options">
+                            <label style="margin-right: 5px; font-size: 12px;">Very Unlikely</label>
+                            <div class="scale-option-container">
+                                <input type="radio" name="probability_buy" value="1">
+                                <span class="scale-number">1</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="probability_buy" value="2">
+                                <span class="scale-number">2</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="probability_buy" value="3">
+                                <span class="scale-number">3</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="probability_buy" value="4">
+                                <span class="scale-number">4</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="probability_buy" value="5">
+                                <span class="scale-number">5</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="probability_buy" value="6">
+                                <span class="scale-number">6</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="probability_buy" value="7">
+                                <span class="scale-number">7</span>
+                            </div>
+                            <label style="margin-left: 5px; font-size: 12px;">Very Likely</label>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn" onclick="validatePurchaseIntention()">Submit Responses</button>
+            </div>
+
+            <!-- Thank You Page -->
+            <div class="section" id="thankyou">
+                <div class="thank-you">
+                    <h2>Thank You!</h2>
+                    <p>Your participation in this research study is greatly appreciated.</p>
+                    <p>Your responses have been recorded and will contribute valuable insights to our understanding of consumer purchase decisions.</p>
+                    <p>If you have any questions about this study, please contact the researchers using the information provided in the consent form.</p>
+                    <br>
+                    <p><em>You may now close this browser window.</em></p>
+                </div>
+            </div>
+
+            <!-- Ineligible Page -->
+            <div class="section" id="ineligible">
+                <div class="thank-you">
+                    <h2>Thank You for Your Interest</h2>
+                    <p>Unfortunately, you do not meet the eligibility criteria for this study.</p>
+                    <p>We appreciate your willingness to participate in research.</p>
+                    <br>
+                    <p><em>You may now close this browser window.</em></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 7;
+        let condition = null; // Will be set randomly
+        let responses = {};
+
+        // Scenarios for different conditions
+        const scenarios = {
+            uncertainty: {
+                title: "Experimental Scenario",
+                content: "Imagine the following situation:<br><br>You are browsing an online store and come across a limited-edition mystery product. The box costs RM50, and the item inside is random. Some of the rare items are said to be worth over RM150, while others may be worth less.",
+                image: `
+                    <div style="text-align: center; margin: 20px 0;">
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                    width: 200px; height: 200px; border-radius: 15px; 
+                                    display: inline-flex; align-items: center; justify-content: center;
+                                    box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 15px;">
+                            <div style="color: white; text-align: center;">
+                                <div style="font-size: 60px; margin-bottom: 10px;">?</div>
+                                <div style="font-weight: bold; font-size: 16px;">LIMITED EDITION</div>
+                                <div style="font-size: 14px; opacity: 0.9;">Mystery Collectible</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <div style="font-size: 18px; color: #667eea; font-weight: bold;">🎁 Mystery Collectible Box</div>
+                            <div style="font-size: 14px; color: #666; margin: 5px 0;">Get a surprise limited-edition collectible! Each box contains one random item from our exclusive collection.</div>
+                            <div style="font-size: 24px; color: #e74c3c; font-weight: bold;">RM 50</div>
+                        </div>
+                    </div>
+                `
+            },
+            certainty: {
+                title: "Experimental Scenario", 
+                content: "Imagine the following situation:<br><br>Imagine you come across a limited-edition collectible product for RM50. The product clearly shows the exact item you will receive a Cry Baby.",
+                image: `
+                    <div style="text-align: center; margin: 20px 0;">
+                        <div style="background: #000; width: 200px; height: 200px; border-radius: 15px; 
+                                    display: inline-flex; align-items: center; justify-content: center;
+                                    box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 15px; position: relative;">
+                            <div style="position: relative;">
+                                <!-- Keychain ring -->
+                                <div style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+                                           width: 30px; height: 30px; border: 4px solid #ffc0cb; border-radius: 50%;
+                                           background: transparent;"></div>
+                                <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+                                           width: 4px; height: 20px; background: #ffc0cb;"></div>
+                                
+                                <!-- Red bow -->
+                                <div style="position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+                                           width: 40px; height: 15px; background: #dc3545; border-radius: 20px;"></div>
+                                <div style="position: absolute; top: -2px; left: 50%; transform: translateX(-50%);
+                                           width: 8px; height: 10px; background: #dc3545;"></div>
+                                
+                                <!-- Main character body -->
+                                <div style="width: 80px; height: 80px; background: #ffc0cb; border-radius: 15px;
+                                           display: flex; flex-direction: column; align-items: center; justify-content: center;
+                                           position: relative;">
+                                    <!-- Face -->
+                                    <div style="background: #ffe4e1; width: 60px; height: 50px; border-radius: 50%;
+                                               display: flex; align-items: center; justify-content: center; position: relative;">
+                                        <!-- Eyes -->
+                                        <div style="position: absolute; left: 15px; top: 15px; width: 8px; height: 12px; 
+                                                   background: #000; border-radius: 10px;"></div>
+                                        <div style="position: absolute; right: 15px; top: 15px; width: 8px; height: 12px; 
+                                                   background: #000; border-radius: 10px;"></div>
+                                        <!-- Mouth -->
+                                        <div style="position: absolute; bottom: 12px; width: 12px; height: 3px; 
+                                                   background: #ff6b6b; border-radius: 3px;"></div>
+                                        <!-- Cheeks -->
+                                        <div style="position: absolute; left: 5px; top: 25px; width: 8px; height: 8px; 
+                                                   background: #ffb3ba; border-radius: 50%; opacity: 0.7;"></div>
+                                        <div style="position: absolute; right: 5px; top: 25px; width: 8px; height: 8px; 
+                                                   background: #ffb3ba; border-radius: 50%; opacity: 0.7;"></div>
+                                    </div>
+                                    <!-- Hair -->
+                                    <div style="position: absolute; top: -15px; width: 50px; height: 25px; 
+                                               background: #ffa500; border-radius: 25px 25px 5px 5px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <div style="font-size: 18px; color: #667eea; font-weight: bold;">🎀 Cry Baby Collectible</div>
+                            <div style="font-size: 14px; color: #666; margin: 5px 0;">Limited-edition collectible keychain featuring adorable Cry Baby character.</div>
+                            <div style="font-size: 24px; color: #e74c3c; font-weight: bold;">RM 50</div>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        function updateProgress() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function nextSection(sectionId) {
+            // Hide current section
+            document.querySelector('.section.active').classList.remove('active');
+            
+            // Show next section
+            document.getElementById(sectionId).classList.add('active');
+            
+            currentStep++;
+            updateProgress();
+
+            // Random assignment when moving to scenario
+            if (sectionId === 'scenario' && condition === null) {
+                // Equal randomization: 50% uncertainty, 50% certainty
+                condition = Math.random() < 0.5 ? 'uncertainty' : 'certainty';
+                responses.condition = condition;
+                
+                const scenario = scenarios[condition];
+                document.getElementById('scenarioContent').innerHTML = `
+                    <h3>${scenario.title}</h3>
+                    <p>${scenario.content}</p>
+                    ${scenario.image}
+                `;
+            }
+        }
+
+        function processConsent() {
+            const consent = document.querySelector('input[name="consent"]:checked');
+            if (!consent) {
+                alert('Please select an option to continue.');
+                return;
+            }
+
+            if (consent.value === 'no') {
+                nextSection('thankyou');
+                return;
+            }
+
+            responses.consent = consent.value;
+            nextSection('eligibility');
+        }
+
+        function checkEligibility() {
+            const ageEligible = document.querySelector('input[name="age_eligible"]:checked');
+            const psychDisorder = document.querySelector('input[name="psych_disorder"]:checked');
+
+            if (!ageEligible || !psychDisorder) {
+                alert('Please answer all eligibility questions.');
+                return;
+            }
+
+            responses.age_eligible = ageEligible.value;
+            responses.psych_disorder = psychDisorder.value;
+
+            if (ageEligible.value === 'no' || psychDisorder.value === 'yes') {
+                nextSection('ineligible');
+                return;
+            }
+
+            nextSection('demographics');
+        }
+
+        function validateDemographics() {
+            const age = document.getElementById('age').value;
+            const gender = document.getElementById('gender').value;
+            const experience = document.querySelector('input[name="mystery_experience"]:checked');
+
+            if (!age || !gender || !experience) {
+                alert('Please fill in all demographic information.');
+                return;
+            }
+
+            if (age < 18 || age > 29) {
+                alert('Age must be between 18-29 years.');
+                return;
+            }
+
+            responses.age = age;
+            responses.gender = gender;
+            responses.mystery_experience = experience.value;
+
+            nextSection('scenario');
+        }
+
+        function validateManipulationCheck() {
+            const certaintyScale = document.querySelector('input[name="certainty_scale"]:checked');
+            const rewardStructure = document.querySelector('input[name="reward_structure"]:checked');
+
+            if (!certaintyScale || !rewardStructure) {
+                alert('Please answer all manipulation check questions before continuing.');
+                return;
+            }
+
+            responses.certainty_scale = certaintyScale.value;
+            responses.reward_structure = rewardStructure.value;
+
+            nextSection('purchase-intention');
+        }
+
+        function validatePurchaseIntention() {
+            const urgeBuy = document.querySelector('input[name="urge_buy"]:checked');
+            const wantPurchase = document.querySelector('input[name="want_purchase"]:checked');
+            const impulseBuy = document.querySelector('input[name="impulse_buy"]:checked');
+            const probabilityBuy = document.querySelector('input[name="probability_buy"]:checked');
+
+            if (!urgeBuy || !wantPurchase || !impulseBuy || !probabilityBuy) {
+                alert('Please answer all questions before submitting.');
+                return;
+            }
+
+            responses.urge_buy = urgeBuy.value;
+            responses.want_purchase = wantPurchase.value;
+            responses.impulse_buy = impulseBuy.value;
+            responses.probability_buy = probabilityBuy.value;
+            responses.timestamp = new Date().toISOString();
+
+            // In a real implementation, you would send this data to your server
+            console.log('Study responses:', responses);
+            
+            nextSection('thankyou');
+        }
+
+        // Initialize progress bar
+        updateProgress();
+    </script>
+</body>
+</html>
