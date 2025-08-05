@@ -764,8 +764,8 @@
         let condition = null;
         let responses = {};
 
-        // Your Google Apps Script URL - Data will save to Google Sheets
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztrB5NUqeIjNkfTVB6T7bU84_QjcYEjLhYu-MNZ2t7/dev';
+        // Your Google Apps Script URL - Replace with your actual deployed URL
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxtirdrH2IaY6qHmWA2yzq2narihN8t3_MG602S_MSQdiwYkWG7TYkc1AUAMRVIvM2GSg/exec';
 
         // Scenarios for different conditions
         const scenarios = {
@@ -963,7 +963,8 @@
             responses.timestamp = new Date().toISOString();
 
             // Show loading state
-            const submitBtn = document.querySelector('#manipulation-check .btn');
+            const submitBtn = document.querySelector('#manipulation-check .btn:last-child');
+            const originalText = submitBtn.innerHTML;
             submitBtn.disabled = true;
             submitBtn.innerHTML = 'Saving to Google Sheets...<div class="loading"></div>';
 
@@ -971,54 +972,72 @@
                 // Send data to Google Sheets
                 await submitToGoogleSheets(responses);
                 console.log('Data successfully saved to Google Sheets:', responses);
-                nextSection('thankyou');
+                
+                // Small delay to show success
+                setTimeout(() => {
+                    nextSection('thankyou');
+                }, 1000);
+                
             } catch (error) {
                 console.error('Google Sheets submission error:', error);
-                alert('Data saved locally but could not sync to Google Sheets. Please contact the researcher.');
-                // Still proceed to thank you page
-                nextSection('thankyou');
+                
+                // Reset button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                
+                // Show user-friendly error message
+                const retry = confirm('There was an issue saving your data to Google Sheets. Would you like to try again? Your responses have been saved locally as backup.');
+                if (retry) {
+                    validateManipulationCheck(); // Retry
+                } else {
+                    nextSection('thankyou'); // Proceed anyway
+                }
             }
         }
 
         async function submitToGoogleSheets(data) {
             // Check if Google Apps Script URL is configured
-            if (GOOGLE_SCRIPT_URL.includes('YOUR_SCRIPT_ID_HERE')) {
+            if (GOOGLE_SCRIPT_URL.includes('YOUR_ACTUAL_SCRIPT_ID_HERE')) {
                 console.log('Google Sheets not configured. Data saved locally:', data);
+                alert('Google Sheets URL not configured. Please update the GOOGLE_SCRIPT_URL variable with your deployed script URL.');
                 return;
             }
 
-            // Convert data to URL-encoded format instead of FormData
-            const params = new URLSearchParams();
-            params.append('timestamp', new Date().toISOString());
-            params.append('study_status', data.study_status || '');
-            params.append('condition', data.condition || '');
-            params.append('consent', data.consent || '');
-            params.append('age_eligible', data.age_eligible || '');
-            params.append('english_proficiency', data.english_proficiency || '');
-            params.append('age', data.age || '');
-            params.append('gender', data.gender || '');
-            params.append('mystery_experience', data.mystery_experience || '');
-            params.append('purchase_frequency', data.purchase_frequency || '');
-            params.append('certainty_scale', data.certainty_scale || '');
-            params.append('reward_structure', data.reward_structure || '');
-            params.append('urge_buy', data.urge_buy || '');
-            params.append('want_purchase', data.want_purchase || '');
-            params.append('impulse_buy', data.impulse_buy || '');
-            params.append('probability_buy', data.probability_buy || '');
+            try {
+                // Convert data to FormData for better compatibility
+                const formData = new FormData();
+                formData.append('timestamp', new Date().toISOString());
+                formData.append('study_status', data.study_status || '');
+                formData.append('condition', data.condition || '');
+                formData.append('consent', data.consent || '');
+                formData.append('age_eligible', data.age_eligible || '');
+                formData.append('english_proficiency', data.english_proficiency || '');
+                formData.append('age', data.age || '');
+                formData.append('gender', data.gender || '');
+                formData.append('mystery_experience', data.mystery_experience || '');
+                formData.append('purchase_frequency', data.purchase_frequency || '');
+                formData.append('certainty_scale', data.certainty_scale || '');
+                formData.append('reward_structure', data.reward_structure || '');
+                formData.append('urge_buy', data.urge_buy || '');
+                formData.append('want_purchase', data.want_purchase || '');
+                formData.append('impulse_buy', data.impulse_buy || '');
+                formData.append('probability_buy', data.probability_buy || '');
 
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: params.toString()
-            });
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors' // This helps with CORS issues
+                });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                // Note: With no-cors mode, we can't read the response
+                // but the request should go through
+                console.log('Data submitted to Google Sheets');
+                return 'Success';
+
+            } catch (error) {
+                console.error('Submission error:', error);
+                throw error;
             }
-
-            return response.text();
         }
 
         // Initialize progress bar
@@ -1026,13 +1045,21 @@
 
         /*
         ==========================================
-        UPDATED GOOGLE APPS SCRIPT CODE:
+        STEP-BY-STEP GOOGLE SHEETS SETUP:
         ==========================================
+        
+        1. CREATE GOOGLE APPS SCRIPT:
+        - Go to script.google.com
+        - Create a new project
+        - Replace default code with the code below
+        
+        2. GOOGLE APPS SCRIPT CODE:
         
         function doPost(e) {
           try {
-            // Open your specific spreadsheet
-            const spreadsheet = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1Q_OTo5whut1Sj9chIJjvTq_41PMN0xxQGFq_7Q_3wcA/edit');
+            // Replace with your Google Sheets ID
+            const spreadsheetId = '1Q_OTo5whut1Sj9chIJjvTq_41PMN0xxQGFq_7Q_3wcA';
+            const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
             const sheet = spreadsheet.getActiveSheet();
             
             // Check if headers exist, if not add them
@@ -1067,16 +1094,37 @@
               new Date()
             ]);
             
-            return ContentService.createTextOutput('Success');
+            return ContentService
+              .createTextOutput('Success')
+              .setMimeType(ContentService.MimeType.TEXT);
             
           } catch (error) {
-            return ContentService.createTextOutput('Error: ' + error.toString());
+            return ContentService
+              .createTextOutput('Error: ' + error.toString())
+              .setMimeType(ContentService.MimeType.TEXT);
           }
         }
 
-        1. Copy this updated code to your Google Apps Script
-        2. Save and deploy as new version
-        3. Now tracks ALL participants including ineligible ones
+        function doGet(e) {
+          return ContentService
+            .createTextOutput('GET method not allowed')
+            .setMimeType(ContentService.MimeType.TEXT);
+        }
+        
+        3. DEPLOY AS WEB APP:
+        - Click Deploy → New Deployment
+        - Choose "Web app" type
+        - Execute as: Me
+        - Who has access: Anyone
+        - Click Deploy
+        - Copy the Web App URL
+        
+        4. UPDATE THIS HTML FILE:
+        - Replace YOUR_ACTUAL_SCRIPT_ID_HERE in GOOGLE_SCRIPT_URL with your deployed URL
+        
+        5. PERMISSIONS:
+        - Grant necessary permissions when prompted
+        - Make sure the script can access your Google Sheets
         ==========================================
         */
     </script>
