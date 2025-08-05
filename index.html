@@ -846,7 +846,7 @@
         let responses = {};
 
         // Your Google Apps Script URL - Current working URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxtirdrH2IaY6qHmWA2yzq2narihN8t3_MG602S_MSQdiwYkWG7TYkc1AUAMRVIvM2GSg/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwb_m1Vz1lrBHSzKYZ3ElxkGJZsevbTQpvWw0PPRHSsyUA_a9zhaIAax17S5MT7JfW/exec';
 
         // Scenarios for different conditions
         const scenarios = {
@@ -1078,7 +1078,7 @@
 
         async function submitToGoogleSheets(data) {
             // Check if Google Apps Script URL is configured
-            if (GOOGLE_SCRIPT_URL.includes('https://script.google.com/macros/s/AKfycbzBMym8a6nUtbYEg3ceR7zBKcNsp-ktt1U_jH6EaWG8Ds1ybaeYcGzoj63KpZTKp3e64w/exec')) {
+            if (GOOGLE_SCRIPT_URL.includes('YOUR_ACTUAL_SCRIPT_ID_HERE')) {
                 console.log('Google Sheets not configured. Data saved locally:', data);
                 alert('Google Sheets URL not configured. Please update the GOOGLE_SCRIPT_URL variable with your deployed script URL.');
                 return;
