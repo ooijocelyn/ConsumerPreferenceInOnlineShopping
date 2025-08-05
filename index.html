@@ -148,6 +148,60 @@
             box-shadow: 0 10px 20px rgba(108, 117, 125, 0.3);
         }
 
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Mobile responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            /* Make images responsive on mobile */
+            .scenario-box img {
+                max-width: 100% !important;
+                width: auto !important;
+                height: auto !important;
+            }
+            
+            .scale-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .scale-options {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+
         .consent-text {
             background: #f8f9fa;
             padding: 25px;
@@ -341,7 +395,9 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn" onclick="processConsent()">Continue</button>
+                <div class="button-group">
+                    <button class="btn" onclick="processConsent()">Continue</button>
+                </div>
             </div>
 
             <!-- Eligibility Check -->
@@ -374,7 +430,10 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn" onclick="checkEligibility()">Continue</button>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="goBack('consent')">Back</button>
+                    <button class="btn" onclick="checkEligibility()">Continue</button>
+                </div>
             </div>
 
             <!-- Demographics -->
@@ -434,7 +493,10 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn" onclick="validateDemographics()">Continue</button>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="goBack('eligibility')">Back</button>
+                    <button class="btn" onclick="validateDemographics()">Continue</button>
+                </div>
             </div>
 
             <!-- Scenario Presentation -->
@@ -443,7 +505,10 @@
                 <div class="scenario-box" id="scenarioContent">
                     <!-- Scenario content will be inserted here based on condition -->
                 </div>
-                <button class="btn" onclick="nextSection('purchase-intention')">Continue</button>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="goBack('demographics')">Back</button>
+                    <button class="btn" onclick="nextSection('purchase-intention')">Continue</button>
+                </div>
             </div>
 
             <!-- Purchase Intention Scale -->
@@ -596,7 +661,10 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn" id="submitBtn" onclick="validatePurchaseIntention()">Continue</button>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="goBack('scenario')">Back</button>
+                    <button class="btn" id="submitBtn" onclick="validatePurchaseIntention()">Continue</button>
+                </div>
             </div>
 
             <!-- Manipulation Check -->
@@ -659,7 +727,10 @@
                     </div>
                 </div>
                 
-                <button class="btn" onclick="validateManipulationCheck()">Submit Responses</button>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="goBack('purchase-intention')">Back</button>
+                    <button class="btn" onclick="validateManipulationCheck()">Submit Responses</button>
+                </div>
             </div>
 
             <!-- Thank You Page -->
@@ -704,7 +775,7 @@
                 image: `
                     <div style="text-align: center; margin: 20px 0;">
                         <img src="https://imgur.com/yCSt9Bi.jpg" 
-                             style="width: 400px; height: auto; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);"
+                             style="max-width: 100%; width: 400px; height: auto; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);"
                              alt="Labubu Have A Seat Mystery Box showing possible characters">
                         <div style="margin-top: 15px;">
                             <div style="font-size: 18px; color: #667eea; font-weight: bold;">🎁 Labubu 'Have A Seat' Mystery Box</div>
@@ -719,8 +790,8 @@
                 content: "Imagine the following situation:<br><br>You come across a Labubu 'Have A Seat' collectible priced at RM70. The product clearly shows the exact item you will receive - the BABA character from this series (as shown in the image). Labubu are popular collectible figures by Pop Mart featuring cute, rabbit-like characters that are very popular among young adults. You know exactly which specific character you will get.",
                 image: `
                     <div style="text-align: center; margin: 20px 0;">
-                        <img src="data:image/jpeg;base64,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" 
-                             style="width: 250px; height: auto; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);"
+                        <img src="https://i.imgur.com/qfFB3Qw.jpeg" 
+                             style="max-width: 100%; width: 250px; height: auto; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);"
                              alt="Labubu BABA character - brown rabbit-like figure">
                         <div style="margin-top: 15px;">
                             <div style="font-size: 18px; color: #667eea; font-weight: bold;">🐰 Labubu 'Have A Seat' - BABA Character</div>
@@ -735,6 +806,18 @@
         function updateProgress() {
             const progress = (currentStep / totalSteps) * 100;
             document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function goBack(sectionId) {
+            // Hide current section
+            document.querySelector('.section.active').classList.remove('active');
+            
+            // Show previous section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update step counter (go backwards)
+            currentStep--;
+            updateProgress();
         }
 
         function nextSection(sectionId) {
@@ -805,8 +888,7 @@
             if (ageEligible.value === 'no' || englishProficiency.value === 'no') {
                 // Save ineligible participant data
                 responses.study_status = 'ineligible';
-                responses.study_status = 'completed';
-            responses.timestamp = new Date().toISOString();
+                responses.timestamp = new Date().toISOString();
                 
                 // Submit data for ineligible participants
                 submitToGoogleSheets(responses).then(() => {
@@ -877,6 +959,7 @@
 
             responses.certainty_scale = certaintyScale.value;
             responses.reward_structure = rewardStructure.value;
+            responses.study_status = 'completed';
             responses.timestamp = new Date().toISOString();
 
             // Show loading state
