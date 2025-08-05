@@ -845,7 +845,7 @@
         let condition = null;
         let responses = {};
 
-        // Your Google Apps Script URL - Replace with your actual deployed URL
+        // Your Google Apps Script URL - Current working URL
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxtirdrH2IaY6qHmWA2yzq2narihN8t3_MG602S_MSQdiwYkWG7TYkc1AUAMRVIvM2GSg/exec';
 
         // Scenarios for different conditions
@@ -1126,19 +1126,18 @@
 
         /*
         ==========================================
-        STEP-BY-STEP GOOGLE SHEETS SETUP:
+        YOUR GOOGLE SHEETS IS READY! ✅
         ==========================================
         
-        1. CREATE GOOGLE APPS SCRIPT:
-        - Go to script.google.com
-        - Create a new project
-        - Replace default code with the code below
+        ✅ Google Sheets URL: https://docs.google.com/spreadsheets/d/1Q_OTo5whut1Sj9chIJjvTq_41PMN0xxQGFq_7Q_3wcA/edit?usp=sharing
+        ✅ Spreadsheet ID: 1Q_OTo5whut1Sj9chIJjvTq_41PMN0xxQGFq_7Q_3wcA
+        ✅ Google Apps Script URL: https://script.google.com/macros/s/AKfycbxtirdrH2IaY6qHmWA2yzq2narihN8t3_MG602S_MSQdiwYkWG7TYkc1AUAMRVIvM2GSg/exec
         
-        2. GOOGLE APPS SCRIPT CODE:
+        MAKE SURE YOUR GOOGLE APPS SCRIPT CODE IS:
         
         function doPost(e) {
           try {
-            // Replace with your Google Sheets ID
+            // Your spreadsheet ID (already correct)
             const spreadsheetId = '1Q_OTo5whut1Sj9chIJjvTq_41PMN0xxQGFq_7Q_3wcA';
             const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
             const sheet = spreadsheet.getActiveSheet();
@@ -1192,20 +1191,10 @@
             .setMimeType(ContentService.MimeType.TEXT);
         }
         
-        3. DEPLOY AS WEB APP:
-        - Click Deploy → New Deployment
-        - Choose "Web app" type
-        - Execute as: Me
-        - Who has access: Anyone
-        - Click Deploy
-        - Copy the Web App URL
-        
-        4. UPDATE THIS HTML FILE:
-        - Replace YOUR_ACTUAL_SCRIPT_ID_HERE in GOOGLE_SCRIPT_URL with your deployed URL
-        
-        5. PERMISSIONS:
-        - Grant necessary permissions when prompted
-        - Make sure the script can access your Google Sheets
+        ✅ YOUR SETUP IS COMPLETE!
+        - Data will be saved to your Google Sheets
+        - You can access it anytime with the URL above
+        - Test the form to see data appear in real-time
         ==========================================
         */
     </script>
