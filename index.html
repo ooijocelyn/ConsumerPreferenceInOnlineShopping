@@ -596,7 +596,70 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn" id="submitBtn" onclick="validatePurchaseIntention()">Submit Responses</button>
+                <button class="btn" id="submitBtn" onclick="validatePurchaseIntention()">Continue</button>
+            </div>
+
+            <!-- Manipulation Check -->
+            <div class="section" id="manipulation-check">
+                <h2>Manipulation Check</h2>
+                
+                <div class="form-group">
+                    <label><strong>How certain were you about what reward you would receive?</strong></label>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
+                        1 = very uncertain, meaning you do not know what you will get<br>
+                        7 = very certain, meaning you know what you will get
+                    </p>
+                    <div class="scale-item">
+                        <span>Very Uncertain</span>
+                        <div class="scale-options">
+                            <div class="scale-option-container">
+                                <input type="radio" name="certainty_scale" value="1">
+                                <span class="scale-number">1</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="certainty_scale" value="2">
+                                <span class="scale-number">2</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="certainty_scale" value="3">
+                                <span class="scale-number">3</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="certainty_scale" value="4">
+                                <span class="scale-number">4</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="certainty_scale" value="5">
+                                <span class="scale-number">5</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="certainty_scale" value="6">
+                                <span class="scale-number">6</span>
+                            </div>
+                            <div class="scale-option-container">
+                                <input type="radio" name="certainty_scale" value="7">
+                                <span class="scale-number">7</span>
+                            </div>
+                        </div>
+                        <span>Very Certain</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><strong>Which best describes the reward structure?</strong></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="reward_knew" name="reward_structure" value="knew">
+                            <label for="reward_knew">I knew exactly what I would get</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="reward_unsure" name="reward_structure" value="unsure">
+                            <label for="reward_unsure">I was unsure what I would get</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="validateManipulationCheck()">Submit Responses</button>
             </div>
 
             <!-- Thank You Page -->
@@ -626,12 +689,12 @@
 
     <script>
         let currentStep = 1;
-        const totalSteps = 6;
+        const totalSteps = 7;
         let condition = null;
         let responses = {};
 
         // Your Google Apps Script URL - Data will save to Google Sheets
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwlBU2O_yrt90dGeXAiVL4AJvpUgSzYf9RIqf85WhXEuO8-3We_xOVc4Qz1RyXvnFwO/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRZEcHIDeFm3M287Qfcr5wIxiyYUMoqumuSgQM9P_CNUo8TaMN014S-a09VG26yCO2/exec';
 
         // Scenarios for different conditions
         const scenarios = {
@@ -640,8 +703,8 @@
                 content: "Imagine the following situation:<br><br>You come across a Labubu 'Have A Seat' collectible priced at RM70. This is sold in a mystery box format, you can see the possible characters (as shown), but you won't know which specific one you'll receive until after purchase. Some versions are valued higher than others.",
                 image: `
                     <div style="text-align: center; margin: 20px 0;">
-                        <img src="https://i.imgur.com/placeholder-labubu-box.jpg" 
-                             style="width: 300px; height: auto; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);"
+                        <img src="https://imgur.com/yCSt9Bi.jpg" 
+                             style="width: 400px; height: auto; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);"
                              alt="Labubu Have A Seat Mystery Box showing possible characters">
                         <div style="margin-top: 15px;">
                             <div style="font-size: 18px; color: #667eea; font-weight: bold;">🎁 Labubu 'Have A Seat' Mystery Box</div>
@@ -759,14 +822,14 @@
             nextSection('scenario');
         }
 
-        async function validatePurchaseIntention() {
+        function validatePurchaseIntention() {
             const urgeBuy = document.querySelector('input[name="urge_buy"]:checked');
             const wantPurchase = document.querySelector('input[name="want_purchase"]:checked');
             const impulseBuy = document.querySelector('input[name="impulse_buy"]:checked');
             const probabilityBuy = document.querySelector('input[name="probability_buy"]:checked');
 
             if (!urgeBuy || !wantPurchase || !impulseBuy || !probabilityBuy) {
-                alert('Please answer all questions before submitting.');
+                alert('Please answer all questions before continuing.');
                 return;
             }
 
@@ -774,10 +837,25 @@
             responses.want_purchase = wantPurchase.value;
             responses.impulse_buy = impulseBuy.value;
             responses.probability_buy = probabilityBuy.value;
+
+            nextSection('manipulation-check');
+        }
+
+        async function validateManipulationCheck() {
+            const certaintyScale = document.querySelector('input[name="certainty_scale"]:checked');
+            const rewardStructure = document.querySelector('input[name="reward_structure"]:checked');
+
+            if (!certaintyScale || !rewardStructure) {
+                alert('Please answer all manipulation check questions before submitting.');
+                return;
+            }
+
+            responses.certainty_scale = certaintyScale.value;
+            responses.reward_structure = rewardStructure.value;
             responses.timestamp = new Date().toISOString();
 
             // Show loading state
-            const submitBtn = document.getElementById('submitBtn');
+            const submitBtn = document.querySelector('#manipulation-check .btn');
             submitBtn.disabled = true;
             submitBtn.innerHTML = 'Saving to Google Sheets...<div class="loading"></div>';
 
@@ -812,6 +890,8 @@
             formData.append('gender', data.gender || '');
             formData.append('mystery_experience', data.mystery_experience || '');
             formData.append('purchase_frequency', data.purchase_frequency || '');
+            formData.append('certainty_scale', data.certainty_scale || '');
+            formData.append('reward_structure', data.reward_structure || '');
             formData.append('urge_buy', data.urge_buy || '');
             formData.append('want_purchase', data.want_purchase || '');
             formData.append('impulse_buy', data.impulse_buy || '');
@@ -831,6 +911,61 @@
 
         // Initialize progress bar
         updateProgress();
+
+        /*
+        ==========================================
+        UPDATED GOOGLE APPS SCRIPT CODE:
+        ==========================================
+        
+        function doPost(e) {
+          try {
+            // Open your specific spreadsheet
+            const spreadsheet = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1Q_OTo5whut1Sj9chIJjvTq_41PMN0xxQGFq_7Q_3wcA/edit');
+            const sheet = spreadsheet.getActiveSheet();
+            
+            // Check if headers exist, if not add them
+            if (sheet.getLastRow() === 0) {
+              sheet.getRange(1, 1, 1, 16).setValues([[
+                'Timestamp', 'Condition', 'Consent', 'Age_Eligible', 'English_Proficiency',
+                'Age', 'Gender', 'Mystery_Experience', 'Purchase_Frequency', 'Certainty_Scale',
+                'Reward_Structure', 'Urge_Buy', 'Want_Purchase', 'Impulse_Buy', 'Probability_Buy', 'Submission_Time'
+              ]]);
+            }
+            
+            const data = e.parameter;
+            
+            // Add participant data as new row
+            sheet.appendRow([
+              data.timestamp || new Date(),
+              data.condition || '',
+              data.consent || '',
+              data.age_eligible || '',
+              data.english_proficiency || '',
+              data.age || '',
+              data.gender || '',
+              data.mystery_experience || '',
+              data.purchase_frequency || '',
+              data.certainty_scale || '',
+              data.reward_structure || '',
+              data.urge_buy || '',
+              data.want_purchase || '',
+              data.impulse_buy || '',
+              data.probability_buy || '',
+              new Date()
+            ]);
+            
+            return ContentService.createTextOutput('Success');
+            
+          } catch (error) {
+            return ContentService.createTextOutput('Error: ' + error.toString());
+          }
+        }
+
+        1. Copy this code to your Google Apps Script
+        2. Deploy as Web App
+        3. Update GOOGLE_SCRIPT_URL above with new deployment URL
+        ==========================================
+        */
     </script>
 </body>
 </html>
