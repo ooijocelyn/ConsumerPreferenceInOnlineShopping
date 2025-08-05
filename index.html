@@ -180,15 +180,59 @@
                 height: auto !important;
             }
             
+            /* Improved mobile scale layout */
             .scale-item {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
                 gap: 15px;
+                padding: 20px 15px;
             }
             
+            .scale-item span {
+                text-align: center;
+                font-size: 16px;
+                line-height: 1.4;
+                margin-bottom: 10px;
+            }
+            
+            /* Mobile scale labels */
+            .scale-labels {
+                display: flex;
+                justify-content: space-between;
+                margin: 10px 0;
+            }
+            
+            .scale-label-left, .scale-label-right {
+                font-size: 13px;
+                font-weight: bold;
+                color: #333;
+            }
+            
+            /* Create a better mobile scale layout */
             .scale-options {
-                flex-wrap: wrap;
-                justify-content: center;
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 5px;
+                margin: 10px 0;
+            }
+            
+            .scale-option-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 5px;
+            }
+            
+            .scale-options input[type="radio"] {
+                transform: scale(1.5);
+                margin: 0;
+            }
+            
+            .scale-number {
+                font-size: 14px;
+                font-weight: bold;
+                color: #333;
             }
             
             .button-group {
@@ -199,6 +243,30 @@
                 width: 100%;
                 margin-right: 0;
                 margin-bottom: 10px;
+            }
+        }
+        
+        /* Extra small mobile devices */
+        @media (max-width: 480px) {
+            .scale-options {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 3px;
+            }
+            
+            .scale-option-container {
+                padding: 8px 3px;
+            }
+            
+            .scale-options input[type="radio"] {
+                transform: scale(1.3);
+            }
+            
+            .scale-number {
+                font-size: 12px;
+            }
+            
+            .scale-label-left, .scale-label-right {
+                font-size: 12px;
             }
         }
 
@@ -257,6 +325,18 @@
         }
 
         .scale-number {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .scale-label-left, .scale-label-right {
             font-size: 12px;
             color: #666;
             font-weight: 500;
@@ -519,8 +599,11 @@
                 <div class="form-group">
                     <div class="scale-item">
                         <span><strong>I would feel a strong urge to buy the product.</strong></span>
+                        <div class="scale-labels">
+                            <span class="scale-label-left">Strongly Disagree</span>
+                            <span class="scale-label-right">Strongly Agree</span>
+                        </div>
                         <div class="scale-options">
-                            <label style="margin-right: 5px; font-size: 12px;">Strongly Disagree</label>
                             <div class="scale-option-container">
                                 <input type="radio" name="urge_buy" value="1">
                                 <span class="scale-number">1</span>
@@ -549,14 +632,16 @@
                                 <input type="radio" name="urge_buy" value="7">
                                 <span class="scale-number">7</span>
                             </div>
-                            <label style="margin-left: 5px; font-size: 12px;">Strongly Agree</label>
                         </div>
                     </div>
 
                     <div class="scale-item">
                         <span><strong>I would want to purchase the product.</strong></span>
+                        <div class="scale-labels">
+                            <span class="scale-label-left">Strongly Disagree</span>
+                            <span class="scale-label-right">Strongly Agree</span>
+                        </div>
                         <div class="scale-options">
-                            <label style="margin-right: 5px; font-size: 12px;">Strongly Disagree</label>
                             <div class="scale-option-container">
                                 <input type="radio" name="want_purchase" value="1">
                                 <span class="scale-number">1</span>
@@ -585,14 +670,16 @@
                                 <input type="radio" name="want_purchase" value="7">
                                 <span class="scale-number">7</span>
                             </div>
-                            <label style="margin-left: 5px; font-size: 12px;">Strongly Agree</label>
                         </div>
                     </div>
 
                     <div class="scale-item">
                         <span><strong>I would feel the impulse to buy the product.</strong></span>
+                        <div class="scale-labels">
+                            <span class="scale-label-left">Strongly Disagree</span>
+                            <span class="scale-label-right">Strongly Agree</span>
+                        </div>
                         <div class="scale-options">
-                            <label style="margin-right: 5px; font-size: 12px;">Strongly Disagree</label>
                             <div class="scale-option-container">
                                 <input type="radio" name="impulse_buy" value="1">
                                 <span class="scale-number">1</span>
@@ -621,14 +708,16 @@
                                 <input type="radio" name="impulse_buy" value="7">
                                 <span class="scale-number">7</span>
                             </div>
-                            <label style="margin-left: 5px; font-size: 12px;">Strongly Agree</label>
                         </div>
                     </div>
 
                     <div class="scale-item">
                         <span><strong>Please indicate the probability that you would buy the product.</strong></span>
+                        <div class="scale-labels">
+                            <span class="scale-label-left">Very Unlikely</span>
+                            <span class="scale-label-right">Very Likely</span>
+                        </div>
                         <div class="scale-options">
-                            <label style="margin-right: 5px; font-size: 12px;">Very Unlikely</label>
                             <div class="scale-option-container">
                                 <input type="radio" name="probability_buy" value="1">
                                 <span class="scale-number">1</span>
@@ -657,7 +746,6 @@
                                 <input type="radio" name="probability_buy" value="7">
                                 <span class="scale-number">7</span>
                             </div>
-                            <label style="margin-left: 5px; font-size: 12px;">Very Likely</label>
                         </div>
                     </div>
                 </div>
@@ -678,7 +766,10 @@
                         7 = very certain, meaning you know what you will get
                     </p>
                     <div class="scale-item">
-                        <span>Very Uncertain</span>
+                        <div class="scale-labels">
+                            <span class="scale-label-left">Very Uncertain</span>
+                            <span class="scale-label-right">Very Certain</span>
+                        </div>
                         <div class="scale-options">
                             <div class="scale-option-container">
                                 <input type="radio" name="certainty_scale" value="1">
@@ -709,7 +800,6 @@
                                 <span class="scale-number">7</span>
                             </div>
                         </div>
-                        <span>Very Certain</span>
                     </div>
                 </div>
 
