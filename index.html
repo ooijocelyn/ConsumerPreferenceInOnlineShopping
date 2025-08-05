@@ -694,7 +694,7 @@
         let responses = {};
 
         // Your Google Apps Script URL - Data will save to Google Sheets
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRZEcHIDeFm3M287Qfcr5wIxiyYUMoqumuSgQM9P_CNUo8TaMN014S-a09VG26yCO2/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztrB5NUqeIjNkfTVB6T7bU84_QjcYEjLhYu-MNZ2t7/dev';
 
         // Scenarios for different conditions
         const scenarios = {
@@ -769,12 +769,24 @@
                 return;
             }
 
+            responses.consent = consent.value;
+
             if (consent.value === 'no') {
+                // Save data for participants who declined consent
+                responses.study_status = 'declined_consent';
+                responses.timestamp = new Date().toISOString();
+                
+                // Submit data for participants who declined
+                submitToGoogleSheets(responses).then(() => {
+                    console.log('Declined consent participant data saved:', responses);
+                }).catch(error => {
+                    console.error('Error saving declined consent data:', error);
+                });
+                
                 nextSection('thankyou');
                 return;
             }
 
-            responses.consent = consent.value;
             nextSection('eligibility');
         }
 
@@ -791,10 +803,23 @@
             responses.english_proficiency = englishProficiency.value;
 
             if (ageEligible.value === 'no' || englishProficiency.value === 'no') {
+                // Save ineligible participant data
+                responses.study_status = 'ineligible';
+                responses.study_status = 'completed';
+            responses.timestamp = new Date().toISOString();
+                
+                // Submit data for ineligible participants
+                submitToGoogleSheets(responses).then(() => {
+                    console.log('Ineligible participant data saved:', responses);
+                }).catch(error => {
+                    console.error('Error saving ineligible participant data:', error);
+                });
+                
                 nextSection('ineligible');
                 return;
             }
 
+            responses.study_status = 'eligible';
             nextSection('demographics');
         }
 
@@ -879,27 +904,31 @@
                 return;
             }
 
-            // Prepare data for Google Sheets
-            const formData = new FormData();
-            formData.append('timestamp', new Date().toISOString());
-            formData.append('condition', data.condition || '');
-            formData.append('consent', data.consent || '');
-            formData.append('age_eligible', data.age_eligible || '');
-            formData.append('english_proficiency', data.english_proficiency || '');
-            formData.append('age', data.age || '');
-            formData.append('gender', data.gender || '');
-            formData.append('mystery_experience', data.mystery_experience || '');
-            formData.append('purchase_frequency', data.purchase_frequency || '');
-            formData.append('certainty_scale', data.certainty_scale || '');
-            formData.append('reward_structure', data.reward_structure || '');
-            formData.append('urge_buy', data.urge_buy || '');
-            formData.append('want_purchase', data.want_purchase || '');
-            formData.append('impulse_buy', data.impulse_buy || '');
-            formData.append('probability_buy', data.probability_buy || '');
+            // Convert data to URL-encoded format instead of FormData
+            const params = new URLSearchParams();
+            params.append('timestamp', new Date().toISOString());
+            params.append('study_status', data.study_status || '');
+            params.append('condition', data.condition || '');
+            params.append('consent', data.consent || '');
+            params.append('age_eligible', data.age_eligible || '');
+            params.append('english_proficiency', data.english_proficiency || '');
+            params.append('age', data.age || '');
+            params.append('gender', data.gender || '');
+            params.append('mystery_experience', data.mystery_experience || '');
+            params.append('purchase_frequency', data.purchase_frequency || '');
+            params.append('certainty_scale', data.certainty_scale || '');
+            params.append('reward_structure', data.reward_structure || '');
+            params.append('urge_buy', data.urge_buy || '');
+            params.append('want_purchase', data.want_purchase || '');
+            params.append('impulse_buy', data.impulse_buy || '');
+            params.append('probability_buy', data.probability_buy || '');
 
             const response = await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: params.toString()
             });
 
             if (!response.ok) {
@@ -925,8 +954,8 @@
             
             // Check if headers exist, if not add them
             if (sheet.getLastRow() === 0) {
-              sheet.getRange(1, 1, 1, 16).setValues([[
-                'Timestamp', 'Condition', 'Consent', 'Age_Eligible', 'English_Proficiency',
+              sheet.getRange(1, 1, 1, 17).setValues([[
+                'Timestamp', 'Study_Status', 'Condition', 'Consent', 'Age_Eligible', 'English_Proficiency',
                 'Age', 'Gender', 'Mystery_Experience', 'Purchase_Frequency', 'Certainty_Scale',
                 'Reward_Structure', 'Urge_Buy', 'Want_Purchase', 'Impulse_Buy', 'Probability_Buy', 'Submission_Time'
               ]]);
@@ -937,6 +966,7 @@
             // Add participant data as new row
             sheet.appendRow([
               data.timestamp || new Date(),
+              data.study_status || '',
               data.condition || '',
               data.consent || '',
               data.age_eligible || '',
@@ -961,9 +991,9 @@
           }
         }
 
-        1. Copy this code to your Google Apps Script
-        2. Deploy as Web App
-        3. Update GOOGLE_SCRIPT_URL above with new deployment URL
+        1. Copy this updated code to your Google Apps Script
+        2. Save and deploy as new version
+        3. Now tracks ALL participants including ineligible ones
         ==========================================
         */
     </script>
